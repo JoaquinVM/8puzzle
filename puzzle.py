@@ -1,9 +1,8 @@
 def show(s):
+  print('-------------')
   for row in s:
-    for c in row:
-      print(c,end=" ")
-    print()
-  print()
+    print('| '+ ' | '.join([str(i) for i in row]) +' |')
+    print('-------------')
 
 def pos0(s):
   for r in range(3):
@@ -19,26 +18,26 @@ def swap(s, r, c):
   return new
 
 def move(s, x):
-  if x=='u':
+  if x=='arriba':
     return swap(s,-1,0)
-  elif x=='d':
+  elif x=='abajo':
     return swap(s,1,0)
-  elif x=='l':
+  elif x=='izquierda':
     return swap(s,0,-1)
-  elif x=='r':
+  elif x=='derecha':
     return swap(s,0,1)
 
 def actions(s):
   row, col  = pos0(s)
   actions = []
   if row > 0:
-    actions += 'u'
+    actions.append('arriba')
   if row < 2:
-    actions += 'd'
+    actions.append('abajo')
   if col > 0:
-    actions += 'l'
+    actions.append('izquierda')
   if col < 2:
-    actions += 'r'
+    actions.append('derecha')
   return actions
 
 def myHash(s):
@@ -50,7 +49,7 @@ def bfs(instate, finstate):
   visited, queue = [], [instate]
   path = {myHash(instate): []}
   while queue:
-    s = queue.pop(0) # DFS: queue.pop(-1)
+    s = queue.pop(0)
     if s == finstate:
       return path[myHash(finstate)]
     if s not in visited:
@@ -61,14 +60,31 @@ def bfs(instate, finstate):
         h = myHash(nextstate)
         if h not in path:
           path[h] = [s
-            for s in path[myHash(s)]]
+            for s in path[myHash( s)]]
           path[h].append(a)
 
+def to_nums(inp):
+  return [int(x) for x in inp.strip().split(' ')]
+
 if __name__ == "__main__":
-    instate = [[1,2,3],[0,5,6],[4,7,8]]
-    finstate = [[1,2,3],[4,5,6],[7,8,0]]
+    print('Ingrese estado inicial')
+    inputI1 = input('Fila 1(ej: 1 2 3 ): ')
+    inputI2 = input('Fila 2: ')
+    inputI3 = input('Fila 3: ')
+    print('Ingrese estado final')
+    inputF1 = input('Fila 1: ')
+    inputF2 = input('Fila 2: ')
+    inputF3 = input('Fila 3: ')
+    
+    instate = [to_nums(inputI1), 
+                to_nums(inputI2),
+                to_nums(inputI3)]
+    finstate = [to_nums(inputF1), 
+                to_nums(inputF2),
+                to_nums(inputF3)]
+
     res = bfs(instate,finstate)
-    print(res)
+    print('Solucion: ', res)
     s = instate
     show(s)
     for a in res:
